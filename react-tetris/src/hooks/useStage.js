@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-
 import { createStage } from '../gameHelpers';
 
-
-export const useStage = (player) => {
+export const useStage = (player, resetPlayer) => {
   const [stage, setStage ] = useState(createStage());
-
+  console.log("in use stage", resetPlayer);
   useEffect(() => { 
+    console.log("in useEffect", resetPlayer)
     const updateStage = prevStage => { 
       //First flush the stage 
       const newStage = prevStage.map(row => 
@@ -24,13 +23,18 @@ export const useStage = (player) => {
           }
         });
       });
-
+      // Then check if we collided
+      if( player.collided) { 
+        console.log("here");
+        console.log(resetPlayer());
+        resetPlayer();
+      }
       return newStage;
     };
 
     setStage(prev => updateStage(prev))
   // These are the dependencies
-  }, [player]); 
+  }, [player, resetPlayer]); 
 
   return [stage, setStage];
 };
