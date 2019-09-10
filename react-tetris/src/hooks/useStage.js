@@ -3,8 +3,28 @@ import { createStage } from '../gameHelpers';
 
 export const useStage = (player, resetPlayer) => {
   const [stage, setStage ] = useState(createStage());
+  const [rowsCleared, setRowsCleared] = useState(0);
+
   console.log("in use stage", resetPlayer);
   useEffect(() => { 
+    setRowsCleared(0);
+
+    const sweepRows = newStage => 
+      //implicit returbn 
+      newStage.reduce((ack, row) => { 
+        // check if rows are merged 
+        if (row.findIndex(cell => cell[0] === 0) === -1) { 
+          //Add rows to rows cleared state 
+          setRowsCleared(prev => prev +1); 
+          //add new row(s) on top using unshift 
+          ack.unshift( new Array(newStage[0].length).fill([0, 'clear']));
+          return ack;
+        }
+        //if not just push it 
+        ack.push(row);
+        return ack;
+      }, [])
+
     console.log("in useEffect", resetPlayer)
     const updateStage = prevStage => { 
       //First flush the stage 
@@ -28,6 +48,7 @@ export const useStage = (player, resetPlayer) => {
         console.log("here");
         console.log(resetPlayer());
         resetPlayer();
+        return sweepRows(newStage);
       }
       return newStage;
     };
