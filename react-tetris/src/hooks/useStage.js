@@ -5,7 +5,6 @@ export const useStage = (player, resetPlayer) => {
   const [stage, setStage ] = useState(createStage());
   const [rowsCleared, setRowsCleared] = useState(0);
 
-  console.log("in use stage", resetPlayer);
   useEffect(() => { 
     setRowsCleared(0);
 
@@ -25,7 +24,6 @@ export const useStage = (player, resetPlayer) => {
         return ack;
       }, [])
 
-    console.log("in useEffect", resetPlayer)
     const updateStage = prevStage => { 
       //First flush the stage 
       const newStage = prevStage.map(row => 
@@ -45,8 +43,6 @@ export const useStage = (player, resetPlayer) => {
       });
       // Then check if we collided
       if( player.collided) { 
-        console.log("here");
-        console.log(resetPlayer());
         resetPlayer();
         return sweepRows(newStage);
       }
@@ -57,5 +53,5 @@ export const useStage = (player, resetPlayer) => {
   // These are the dependencies
   }, [player, resetPlayer]); 
 
-  return [stage, setStage];
+  return [stage, setStage, rowsCleared];
 };
